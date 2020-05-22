@@ -107,7 +107,7 @@ class BubbleWorld(private val listener: Listener) {
         private const val INITIAL_IMPULSE_Y = 0.1f
     }
 
-    private val world = World(Vec2(0.0f, 0.0f), false)
+    private val world = World(Vec2(0.0f, 0.0f), true)
     private var simulationDisposable: Disposable? = null
     private var worldWidth = 0f
     private var worldHeight = 0f
