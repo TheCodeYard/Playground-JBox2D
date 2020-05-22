@@ -43,7 +43,7 @@ class BubbleWorld(private val listener: Listener) {
         READY,
 
         /**
-         * The world is simulating the movements of its objects.
+         * The world is simulating the movements of the bodies within it.
          */
         SIMULATING
     }
@@ -76,23 +76,23 @@ class BubbleWorld(private val listener: Listener) {
         private const val VELOCITY_ITERATIONS = 2
 
         /**
-         * Defines how accurately the positions of the objects should be calculated. Bigger the value means higher accuracy but slower performance.
+         * Defines how accurately the positions of the bodies should be calculated. Bigger the value means higher accuracy but slower performance.
          */
         private const val POSITION_ITERATIONS = 2
 
         /**
-         * In this example we assume that all objects have the same density.
+         * In this example we assume that all bodies have the same density.
          */
         private const val DENSITY = 0.5f
 
         /**
-         * In this example we assume that all objects have the same friction.
+         * In this example we assume that all bodies have the same friction.
          */
         private const val FRICTION = 0.5f
 
         /**
-         * Restitution defines how elastic the objects are.
-         * In this example we assume that all objects have the same friction.
+         * Restitution defines how elastic the bodies are.
+         * In this example we assume that all bodies have the same friction.
          */
         private const val RESTITUTION = 0.5f
 
@@ -285,7 +285,7 @@ class BubbleWorld(private val listener: Listener) {
         // Set the bubble in the user data so that we can easily retrieve it later and update the values that it holds.
         body.userData = bubble
 
-        // Give the object an initial speed.
+        // Give the body an initial speed.
         body.applyLinearImpulse(Vec2(INITIAL_IMPULSE_X, INITIAL_IMPULSE_Y), body.position)
 
         return body

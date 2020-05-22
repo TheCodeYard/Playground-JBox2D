@@ -91,7 +91,7 @@ class BubbleContainerView @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     /**
-     * Adds a new [BubbleView] and tells the 2D world to add a bubble object that corresponds to this view.
+     * Adds a new [BubbleView] and tells the 2D world to add a body that corresponds to this view.
      */
     private fun addBubbleView(bubble: Bubble) {
         val bubbleView = BubbleView(context)
