@@ -99,12 +99,12 @@ class BubbleWorld(private val listener: Listener) {
         /**
          * The x value of the bubble's initial impulse.
          */
-        private const val INITIAL_IMPULSE_X = 0.1f
+        private const val INITIAL_IMPULSE_X = 0.05f
 
         /**
          * The y value of the bubble's initial impulse.
          */
-        private const val INITIAL_IMPULSE_Y = 0.1f
+        private const val INITIAL_IMPULSE_Y = 0.05f
     }
 
     private val world = World(Vec2(0.0f, 0.0f), true)

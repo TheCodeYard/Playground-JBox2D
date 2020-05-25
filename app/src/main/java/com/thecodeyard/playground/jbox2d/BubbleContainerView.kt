@@ -91,6 +91,9 @@ class BubbleContainerView @JvmOverloads constructor(context: Context, attrs: Att
         }
     }
 
+    /**
+     * Creates the bubbles with a delay between them.
+     */
     private fun createBubbles() {
         bubbleCreationDisposable?.dispose()
         bubbleCreationDisposable = Observable.interval(BUBBLE_CREATION_INTERVAL, TimeUnit.MILLISECONDS)
