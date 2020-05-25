@@ -9,9 +9,14 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import org.jbox2d.collision.shapes.CircleShape
 import org.jbox2d.collision.shapes.PolygonShape
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 /**
  * The container view of the bubbles. This will add the [BubbleView]s, start the simulation, and update the values of the views at each simulation step.
@@ -31,11 +36,17 @@ class BubbleContainerView @JvmOverloads constructor(context: Context, attrs: Att
         /**
          * The amount of bubbles to create.
          */
-        private const val BUBBLE_COUNT = 6
+        private const val BUBBLE_COUNT = 6L
+
+        /**
+         * The interval at which the bubbles are created one after the other.
+         */
+        private const val BUBBLE_CREATION_INTERVAL = 500L
     }
 
     private val world = BubbleWorld(this)
     private val paint = Paint()
+    private var bubbleCreationDisposable: Disposable? = null
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -45,18 +56,7 @@ class BubbleContainerView @JvmOverloads constructor(context: Context, attrs: Att
             // Create the world if it's not already created.
             if (world.state == BubbleWorld.State.IDLE) {
                 world.create(measuredWidth, measuredHeight)
-
-                val random = Random()
-                for (i in 0 until BUBBLE_COUNT) {
-                    val bubble = Bubble(viewId = View.generateViewId(),
-                            viewSize = BUBBLE_SIZE,
-                            viewColor = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256)),
-                            viewText = "Bubble $i",
-                            viewX = 0f,
-                            viewY = 0f)
-
-                    addBubbleView(bubble)
-                }
+                createBubbles()
             }
 
             // Start simulation.
@@ -67,6 +67,7 @@ class BubbleContainerView @JvmOverloads constructor(context: Context, attrs: Att
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         world.stopSimulation()
+        bubbleCreationDisposable?.dispose()
     }
 
     override fun dispatchDraw(canvas: Canvas) {
@@ -88,6 +89,26 @@ class BubbleContainerView @JvmOverloads constructor(context: Context, attrs: Att
             // This will trigger dispatchDraw().
             invalidate()
         }
+    }
+
+    private fun createBubbles() {
+        bubbleCreationDisposable?.dispose()
+        bubbleCreationDisposable = Observable.interval(BUBBLE_CREATION_INTERVAL, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .take(BUBBLE_COUNT)
+                .subscribe {
+                    val index = it.toInt()
+                    val random = Random()
+                    val bubble = Bubble(viewId = View.generateViewId(),
+                            viewSize = BUBBLE_SIZE,
+                            viewColor = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256)),
+                            viewText = "Bubble $index",
+                            viewX = 0f,
+                            viewY = 0f)
+
+                    addBubbleView(bubble)
+                }
     }
 
     /**
