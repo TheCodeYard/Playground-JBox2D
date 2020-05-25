@@ -207,6 +207,7 @@ class BubbleWorld(private val listener: Listener) {
     private fun createWorldBoundaries() {
         Log.d(BubbleWorld::class.java.simpleName, "Create Boundaries")
         val boundariesBodyDef = BodyDef()
+        // A static body has 0 velocity and mass.
         boundariesBodyDef.type = BodyType.STATIC
 
         val topLeft = Vec2(0f, 0f)
@@ -262,12 +263,13 @@ class BubbleWorld(private val listener: Listener) {
         // Set the starting position anywhere within the world's boundaries.
         val startingX = (Math.random() * worldWidth).toFloat()
         val startingY = (Math.random() * worldHeight).toFloat()
+
         val bodyDef = BodyDef()
         bodyDef.type = BodyType.DYNAMIC
         bodyDef.position.set(startingX, startingY)
 
         val shape = CircleShape()
-        shape.m_radius = Metrics.pixelsToMeters(bubble.viewSize/2)
+        shape.m_radius = Metrics.pixelsToMeters(bubble.viewSize / 2)
 
         // Create a fixture for the bubble.
         val fixtureDef = FixtureDef()
@@ -280,13 +282,14 @@ class BubbleWorld(private val listener: Listener) {
         body.createFixture(fixtureDef)
 
         // We set the mass of the circle to be relative to its size. A bubble with a bigger radius, will have a bigger mass.
-        body.m_mass = Math.PI.toFloat() * shape.m_radius.pow(2f)
+        body.m_mass = Math.PI.toFloat() * shape.m_radius
 
         // Set the bubble in the user data so that we can easily retrieve it later and update the values that it holds.
         body.userData = bubble
 
         // Give the body an initial speed.
-        body.applyLinearImpulse(Vec2(INITIAL_IMPULSE_X, INITIAL_IMPULSE_Y), body.position)
+        val impulse = Vec2(INITIAL_IMPULSE_X, INITIAL_IMPULSE_Y)
+        body.applyLinearImpulse(impulse, body.position)
 
         return body
     }
