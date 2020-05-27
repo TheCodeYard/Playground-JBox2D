@@ -12,7 +12,7 @@ object Metrics {
     /**
      * Coverts pixels to meters.
      */
-    fun pixelsToMeters(value: Int): Float {
+    fun pixelsToMeters(value: Float): Float {
         return value / SCREEN_TO_WORLD_RATIO
     }
 

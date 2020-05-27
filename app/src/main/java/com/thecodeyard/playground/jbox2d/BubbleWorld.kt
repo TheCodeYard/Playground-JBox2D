@@ -117,8 +117,8 @@ class BubbleWorld(private val listener: Listener) {
      * If the world has already been created, then a subsequent call to this method will restart it.
      */
     fun create(viewWidth: Int, viewHeight: Int) {
-        worldWidth = Metrics.pixelsToMeters(viewWidth)
-        worldHeight = Metrics.pixelsToMeters(viewHeight)
+        worldWidth = Metrics.pixelsToMeters(viewWidth.toFloat())
+        worldHeight = Metrics.pixelsToMeters(viewHeight.toFloat())
 
         stopSimulation()
         destroyWorld()
@@ -141,11 +141,11 @@ class BubbleWorld(private val listener: Listener) {
         stopSimulation()
         Log.d(BubbleWorld::class.java.simpleName, "Start simulation")
         simulationDisposable = Observable.interval(TIME_STEP_MS, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    update()
-                }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                update()
+            }
 
         state = State.SIMULATING
     }
@@ -269,7 +269,7 @@ class BubbleWorld(private val listener: Listener) {
         bodyDef.position.set(startingX, startingY)
 
         val shape = CircleShape()
-        shape.m_radius = Metrics.pixelsToMeters(bubble.viewSize / 2)
+        shape.m_radius = Metrics.pixelsToMeters(bubble.viewSize / 2f)
 
         // Create a fixture for the bubble.
         val fixtureDef = FixtureDef()
